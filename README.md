@@ -115,6 +115,4 @@ test/                    unit tests
 - The API runs on the same machine as k6 in local runs and CI – fine for finding regressions and relative limits, but absolute capacity numbers need a production-like environment and separate load-generator machines.
 - Database and payment latencies are simulated, which keeps results reproducible but does not replace tests against real infrastructure.
 
-## License
 
-MIT
