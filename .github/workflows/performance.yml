@@ -1,0 +1,80 @@
+name: Performance tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      duration_scale:
+        description: "Test length factor (1 = full ~3 min load test)"
+        default: "0.5"
+  schedule:
+    - cron: "0 3 * * *" # nightly
+
+env:
+  DURATION_SCALE: ${{ github.event.inputs.duration_scale || '0.5' }}
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+
+  smoke-and-load:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: grafana/setup-k6-action@v1
+      - name: Start the API
+        run: |
+          npm run api > api.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf localhost:3000/health && break; sleep 1; done
+      - name: Smoke test (does everything work?)
+        run: npm run perf:smoke
+      - name: Load test (SLO thresholds – k6 exits with 99 if one fails)
+        run: npm run perf:load
+      - name: Compare with baseline (fails on regressions)
+        run: npm run report
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-reports
+          path: reports/
+
+  # Proves the pipeline catches a real performance regression:
+  # the API is started with an N+1 query bug – the comparison MUST fail.
+  regression-detection:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: grafana/setup-k6-action@v1
+      - name: Start the API with a performance bug
+        run: |
+          npm run api:buggy > api.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf localhost:3000/health && break; sleep 1; done
+      - run: npm run perf:load || true
+      - name: The regression must be detected
+        run: |
+          if npm run report; then
+            echo "::error::The N+1 regression was NOT detected"
+            exit 1
+          fi
+          echo "Regression detected as expected."
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: regression-demo-report
+          path: reports/

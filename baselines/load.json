@@ -1,0 +1,165 @@
+{
+  "test": "load",
+  "finishedAt": "2026-10-25T17:11:46.435Z",
+  "overall": {
+    "requests": 4386,
+    "rps": 51,
+    "errorRate": 0,
+    "checksRate": 1,
+    "vusMax": 102,
+    "p95": 49.3,
+    "purchaseP95": 242.9
+  },
+  "endpoints": {
+    "sales_report": {
+      "count": 9,
+      "avg": 47,
+      "p50": 46.9,
+      "p95": 56.3,
+      "p99": 58,
+      "max": 58.4,
+      "errorRate": 0
+    },
+    "cart": {
+      "count": 209,
+      "avg": 5.9,
+      "p50": 5.8,
+      "p95": 7.9,
+      "p99": 8.3,
+      "max": 28.7,
+      "errorRate": 0
+    },
+    "checkout": {
+      "count": 209,
+      "avg": 153.8,
+      "p50": 155.6,
+      "p95": 198.6,
+      "p99": 208.1,
+      "max": 215.2,
+      "errorRate": 0
+    },
+    "product": {
+      "count": 1960,
+      "avg": 5.9,
+      "p50": 5.7,
+      "p95": 7.9,
+      "p99": 10.6,
+      "max": 88.3,
+      "errorRate": 0
+    },
+    "add_to_cart": {
+      "count": 305,
+      "avg": 7.3,
+      "p50": 7,
+      "p95": 9.8,
+      "p99": 11.5,
+      "max": 15.1,
+      "errorRate": 0
+    },
+    "products": {
+      "count": 1483,
+      "avg": 13.6,
+      "p50": 13.2,
+      "p95": 17.9,
+      "p99": 28.8,
+      "max": 62,
+      "errorRate": 0
+    },
+    "login": {
+      "count": 211,
+      "avg": 2.9,
+      "p50": 2.8,
+      "p95": 4,
+      "p99": 6.6,
+      "max": 11.8,
+      "errorRate": 0
+    }
+  },
+  "thresholds": [
+    {
+      "metric": "checks",
+      "expression": "rate>0.99",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:checkout}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:product}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:sales_report}",
+      "expression": "p(95)<1000",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:cart}",
+      "expression": "p(95)<80",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:checkout}",
+      "expression": "p(95)<500",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:product}",
+      "expression": "p(95)<80",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:add_to_cart}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:sales_report}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:add_to_cart}",
+      "expression": "p(95)<80",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:login}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "purchase_journey_duration",
+      "expression": "p(95)<1500",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:cart}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_failed{name:products}",
+      "expression": "rate<0.01",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:products}",
+      "expression": "p(95)<100",
+      "ok": true
+    },
+    {
+      "metric": "http_req_duration{name:login}",
+      "expression": "p(95)<400",
+      "ok": true
+    }
+  ]
+}

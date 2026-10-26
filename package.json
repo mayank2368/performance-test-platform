@@ -1,0 +1,26 @@
+{
+  "name": "shop-performance-tests",
+  "version": "1.0.0",
+  "description": "Performance test platform: k6 load, stress, spike and soak tests for a shop API, with SLO thresholds, baseline regression detection, HTML reports, Grafana dashboards and CI.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "api": "node api/server.js",
+    "api:buggy": "PERF_BUG=n_plus_one node api/server.js",
+    "test": "node --test \"test/*.test.js\"",
+    "perf:smoke": "mkdir -p reports && k6 run --no-usage-report k6/tests/smoke.js",
+    "perf:load": "mkdir -p reports && K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=reports/load-dashboard.html k6 run --no-usage-report k6/tests/load.js",
+    "perf:stress": "mkdir -p reports && K6_WEB_DASHBOARD=true K6_WEB_DASHBOARD_EXPORT=reports/stress-dashboard.html k6 run --no-usage-report k6/tests/stress.js",
+    "perf:spike": "mkdir -p reports && k6 run --no-usage-report k6/tests/spike.js",
+    "perf:soak": "mkdir -p reports && k6 run --no-usage-report k6/tests/soak.js",
+    "perf:load:grafana": "mkdir -p reports && k6 run --no-usage-report --out influxdb=http://localhost:8086/k6 k6/tests/load.js",
+    "report": "node tools/report.js reports/load-summary.json",
+    "baseline:save": "node tools/report.js reports/load-summary.json --save-baseline",
+    "monitoring:up": "docker compose -f monitoring/docker-compose.yml up -d",
+    "monitoring:down": "docker compose -f monitoring/docker-compose.yml down -v"
+  },
+  "license": "MIT"
+}
