@@ -1,6 +1,6 @@
 # Shop API – Performance Test Platform
 
-![Performance tests](https://github.com/YOUR-GITHUB-USERNAME/shop-performance-tests/actions/workflows/performance.yml/badge.svg)
+![Performance tests](https://github.com/mayank2368/shop-performance-tests/actions/workflows/performance.yml/badge.svg)
 ![k6](https://img.shields.io/badge/k6-load%20testing-7d64ff)
 ![Node.js](https://img.shields.io/badge/Node.js-22%2B-green)
 
